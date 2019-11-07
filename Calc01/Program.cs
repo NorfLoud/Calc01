@@ -22,10 +22,7 @@ namespace Calc01
                     Console.Write("Введите код выбранной команды: ");
                     _UserConsole.DoOperation(Convert.ToInt32(Console.ReadLine()));      // Ожидаем ввода кода команды
                 }
-                catch
-                {
-                    continue;
-                }
+                catch (Exception) { }
             }
         }
     }
