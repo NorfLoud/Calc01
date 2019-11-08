@@ -22,7 +22,10 @@ namespace Calc01
                     Console.Write("Введите код выбранной команды: ");
                     _UserConsole.DoOperation(Convert.ToInt32(Console.ReadLine()));      // Ожидаем ввода кода команды
                 }
-                catch (Exception) { }
+                catch (Exception ex) 
+                {
+                    _UserConsole.MessageOutput("Сообщение: " + ex.Message + "\nВведена не допустимая команда! Попробуйте снова.");
+                }
             }
         }
     }
@@ -54,11 +57,12 @@ namespace Calc01
         {
             Command = -1;
 
-            _Funcs = new Func[4];
+            _Funcs = new Func[5];
             _Funcs[0] = null;
             _Funcs[1] = Sum;
             _Funcs[2] = Sub;
             _Funcs[3] = Mul;
+            _Funcs[4] = Div;
         }
 
         /// <summary>
@@ -71,6 +75,7 @@ namespace Calc01
             Console.WriteLine("1 - вычислить сумму;");
             Console.WriteLine("2 - вычислить разность;");
             Console.WriteLine("3 - вычислить произведение;");
+            Console.WriteLine("4 - вычислить частоное от деления;");
         }
 
         /// <summary>
@@ -85,20 +90,20 @@ namespace Calc01
             {
                 if (Command < _Funcs.Length)
                 {
-                    double x1 = GetArg("первый"), x2 = GetArg("второй");
+                    double x1, x2, result;
 
-                    bool funcResult = _Funcs[Command](x1, x2, out double result);
-                    if (funcResult)
+                    do
                     {
-                        
-                    }
+                        x1 = GetArg("первый");
+                        x2 = GetArg("второй");
+                    } while (!_Funcs[Command](x1, x2, out result));
 
-                    Console.WriteLine("/-----/\n" + "Результат выполнения операции равен: " + result.ToString() + "\n/-----/");
+                    MessageOutput("Результат выполнения операции равен: " + result.ToString());
                     // Console.WriteLine("Нажмите Enter для продолжения."); Console.ReadLine();
                 }
                 else
                 {
-                    Console.WriteLine("/-----/\n" + "Введена не верная команда!" + "\n/-----/");
+                    MessageOutput("Введена не верная команда!");
                 }
             }
         }
@@ -119,13 +124,23 @@ namespace Calc01
                 {
                     result = Convert.ToDouble(Console.ReadLine().Replace('.', ','));
                 }
-                catch
+                catch (Exception ex)
                 {
                     result = null;
+                    MessageOutput("Сообщение: " + ex.Message);
                 }
             } while (result == null);
 
             return (double)result;
+        }
+
+        /// <summary>
+        /// Метод для вывода сообщений программы в обрамлении полей
+        /// </summary>
+        /// <param name="aStr">Строка с сообщением для вывода</param>
+        public void MessageOutput(string aStr)
+        {
+            Console.WriteLine("/-----/\n" + aStr + "\n/-----/");
         }
     }
 
@@ -193,6 +208,29 @@ namespace Calc01
             try
             {
                 result = aArg1 * aArg2;
+            }
+            catch
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Метод вычисляет результат деления первого аргумента на второй
+        /// </summary>
+        /// <param name="aArg1">Делимое</param>
+        /// <param name="aArg2">Делитель</param>
+        /// <param name="result">Реузльтат выполнения операции над аргументами</param>
+        /// <returns></returns>
+        protected bool Div(double aArg1, double aArg2, out double result)
+        {
+            result = 0.0;
+
+            try
+            {
+                result = aArg1 / aArg2;
             }
             catch
             {
