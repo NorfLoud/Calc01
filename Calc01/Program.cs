@@ -30,9 +30,9 @@ namespace Calc01
         }
     }
 
-    public class UserConsole : Functions
+    public class UserConsole : FunctionsInstance
     {
-        private Func[] _Funcs;
+        private readonly FunctionDelegate[] _Funcs;
         private int _Command;
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Calc01
         {
             Command = -1;
 
-            _Funcs = new Func[5];
+            _Funcs = new FunctionDelegate[5];
             _Funcs[0] = null;
             _Funcs[1] = Sum;
             _Funcs[2] = Sub;
@@ -112,7 +112,7 @@ namespace Calc01
         /// Метод для получения значения аргументов функции
         /// </summary>
         /// <param name="aStr">Строка, указывающая на порядковый номер аргумента</param>
-        /// <returns></returns>
+        /// <returns>Возвращает число типа double, которое было введено в консоль</returns>
         private double GetArg(string aStr)
         {
             double? result;
@@ -120,6 +120,7 @@ namespace Calc01
             do
             {
                 Console.Write("Введите " + aStr + " аргумент: ");
+
                 try
                 {
                     result = Convert.ToDouble(Console.ReadLine().Replace('.', ','));
@@ -144,9 +145,9 @@ namespace Calc01
         }
     }
 
-    public abstract class Functions
+    public abstract class FunctionsInstance
     {
-        protected delegate bool Func(double aArg1, double aArg2, out double result);
+        protected delegate bool FunctionDelegate(double aArg1, double aArg2, out double result);
 
         /// <summary>
         /// Метод вычисляет сумму двух аргументов
@@ -154,7 +155,7 @@ namespace Calc01
         /// <param name="aArg1">Первый агрумент</param>
         /// <param name="aArg2">Второй аргумент</param>
         /// <param name="result">Результат выполнения операции над аргументами</param>
-        /// <returns></returns>
+        /// <returns>Возвращает флаг с результатом выполнения операции</returns>
         protected bool Sum(double aArg1, double aArg2, out double result)
         {
             result = 0.0;
@@ -177,7 +178,7 @@ namespace Calc01
         /// <param name="aArg1">Первый агрумент</param>
         /// <param name="aArg2">Второй аргумент</param>
         /// <param name="result">Результат выполнения операции над аргументами</param>
-        /// <returns></returns>
+        /// <returns>Возвращает флаг с результатом выполнения операции</returns>
         protected bool Sub(double aArg1, double aArg2, out double result)
         {
             result = 0.0;
@@ -200,7 +201,7 @@ namespace Calc01
         /// <param name="aArg1">Первый агрумент</param>
         /// <param name="aArg2">Второй аргумент</param>
         /// <param name="result">Результат выполнения операции над аргументами</param>
-        /// <returns></returns>
+        /// <returns>Возвращает флаг с результатом выполнения операции</returns>
         protected bool Mul(double aArg1, double aArg2, out double result)
         {
             result = 0.0;
@@ -223,7 +224,7 @@ namespace Calc01
         /// <param name="aArg1">Делимое</param>
         /// <param name="aArg2">Делитель</param>
         /// <param name="result">Реузльтат выполнения операции над аргументами</param>
-        /// <returns></returns>
+        /// <returns>Возвращает флаг с результатом выполнения операции</returns>
         protected bool Div(double aArg1, double aArg2, out double result)
         {
             result = 0.0;
